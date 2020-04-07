@@ -1,0 +1,9 @@
+{
+  "name": "lambda-watchtower",
+  "version": "1.0.0",
+  "description": "Check endpoint availability and response time on AWS Lambda",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.275.1"
+  }
+}

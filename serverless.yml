@@ -1,0 +1,84 @@
+service: sls-watchtower
+
+frameworkVersion: ">=1.9.0 <2.0.0"
+
+custom:
+  vars: ${file(./vars.yml):${opt:stageflag, "dev"}}
+  webpack:
+    webpackConfig: ./webpack.config.js
+    packager: yarn
+    excludeFiles: ./functions/**/*.test.js
+    includeModules:
+      packagePath: ./package.json
+      forceExclude:
+        - aws-sdk
+  exportGitVariables: false
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs12.x
+  stackName: ${self:custom.vars.STACKNAME}
+  logRetentionInDays: 3
+  deploymentBucket:
+    name: ${cf:marketing-resources-prod.DeploymentBucket}
+  stackTags: ${self:custom.vars.STACK_TAGS}
+
+functions:
+  watchtower:
+    handler: functions/watchtower/index.handler
+    timeout: 30
+    memorySize: 128
+    role: RoleWatchtower
+    events:
+      - schedule:
+        rate: rate(5 minutes)
+        enabled: true
+        input: |
+          {
+            "targets": [
+              {
+                "url": "https://frontlines.health",
+                "name": "frontlines.health"
+              }
+            ],
+            "timeout": 5000,
+            "namespace": "Watchtower"
+          }
+
+resources:
+  Resources:
+    RoleWatchtower:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: ${self:custom.vars.STACKNAME}-watchtower
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ${self:custom.vars.STACKNAME}-watchtower
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "arn:aws:logs:*:*:*"
+                - Effect: Allow
+                  Action:
+                    - cloudwatch:PutMetricData
+                  Resource:
+                    - "*"
+
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-webpack
+  - serverless-plugin-git-variables

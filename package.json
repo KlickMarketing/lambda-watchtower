@@ -1,25 +1,47 @@
 {
-  "name": "lambda-watchtower",
+  "name": "sls-watchtower",
   "version": "1.0.0",
-  "description": "Check endpoint availability and response time on AWS Lambda",
-  "main": "index.js",
-  "dependencies": {
-    "aws-sdk": "^2.275.1"
+  "private": true,
+  "workspaces": [
+    "functions/*"
+  ],
+  "eslintConfig": {
+    "env": {
+      "browser": false,
+      "commonjs": true,
+      "node": true,
+      "es6": true
+    },
+    "extends": [
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "trailingComma": "all"
+        }
+      ]
+    }
   },
   "devDependencies": {
-    "eslint": "^5.16.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wmnnd/lambda-watchtower.git"
-  },
-  "author": "Philipp Schmieder",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/wmnnd/lambda-watchtower/issues"
-  },
-  "homepage": "https://github.com/wmnnd/lambda-watchtower#readme"
+    "@babel/core": "^7.9.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.4",
+    "prettier-eslint": "^9.0.1",
+    "serverless-plugin-git-variables": "^4.0.0",
+    "serverless-pseudo-parameters": "^2.5.0",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.42.1",
+    "webpack-node-externals": "^1.7.2"
+  }
 }

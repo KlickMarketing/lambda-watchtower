@@ -1,0 +1,18 @@
+default: &default
+  REGION: ${opt:region, self:provider.region}
+  STAGE: ${opt:stage, "dev"}
+  STACKNAME: ${self:service}-${self:custom.vars.STAGE}
+  STACK_TAGS:
+    SERVICE: ${self:service}
+    GIT_REPOSITORY: ${git:repository}
+    GIT_BRANCH: ${self:custom.vars.STAGE}
+
+dev:
+  <<: [*default]
+  STAGEFLAG: dev
+  SSMSECRETS: /bch/covidnearyou/secrets/dev
+
+prod: &prod
+  <<: [*default]
+  STAGEFLAG: prod
+  SSMSECRETS: /bch/covidnearyou/secrets/prod
