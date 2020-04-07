@@ -38,8 +38,8 @@ functions:
           {
             "targets": [
               {
-                "url": "https://frontlines.health",
-                "name": "frontlines.health"
+                "url": "https://www.klick.com",
+                "name": "klick.com"
               }
             ],
             "timeout": 5000,
@@ -54,7 +54,7 @@ resources:
         Path: /
         RoleName: ${self:custom.vars.STACKNAME}-watchtower
         AssumeRolePolicyDocument:
-          Version: 2012-10-17
+          Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Principal:
@@ -64,7 +64,7 @@ resources:
         Policies:
           - PolicyName: ${self:custom.vars.STACKNAME}-watchtower
             PolicyDocument:
-              Version: 2012-10-17
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
